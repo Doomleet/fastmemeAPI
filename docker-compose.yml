@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: memes
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: qasaq123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - connectwork
+    
+
+  test_postgres:
+    image: postgres:15
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+    networks:
+      - connectwork
+
+  minio:
+    image: minio/minio
+    command: server /Data
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio-data:/Data
+      - minio-tmp:/tmp
+      - minio-config:/root/.minio
+    networks:
+      - connectwork
+
+  public_api:
+    build:
+      context: .
+      dockerfile: app/api/Dockerfile.public_api
+    ports:
+      - '8000:80'
+    depends_on:
+      - postgres
+      - minio
+    env_file:
+      - app/api/.env
+    networks:
+      - connectwork
+
+  privat_api:
+    build:
+      context: .
+      dockerfile: app/privat_api/Dockerfile.privat_api
+    ports:
+      - '8001:80'
+    depends_on:
+      - minio
+    env_file:
+      - app/privat_api/.env
+    networks:
+      - connectwork
+
+
+networks:
+  connectwork:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  minio-data:
+  minio-tmp:
+  minio-config:

@@ -1,0 +1,9 @@
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+
+COPY ./app/privat_api/requirements.txt /app/requirements_privat.txt
+
+RUN pip install -r /app/requirements_privat.txt
+
+RUN mkdir -p /app/tmp
+
+COPY ./app/privat_api /app
