@@ -6,6 +6,19 @@
 * База данных: minio + postgreSQL
 * Контейнеризация: docker
 
+Расположение .env
+```
+└── app/                  
+    └── api/
+        ├── ...
+        ├── .env            
+    └── privat_api 
+        ├── ... 
+        ├── .env                 
+├── ... 
+├── docker-compose.yml
+├── .env
+```
 
 Формат app/api/.env:
 ``` 
@@ -29,6 +42,13 @@ MINIO_SECRET_KEY = 'minioadmin'
 MINIO_BUCKET_NAME = 'memes'
 IMG_DOWNLOAD_ENDPOINT_URL = 'localhost:9000'
 TMP_DIR = "/tmp"
+```
+
+Формат .env (для docker-compose):
+```
+DB_USER=admin
+DB_PASSWORD=qasaq123
+DB_NAME=memes
 ```
 
 Запуск backend'а:
